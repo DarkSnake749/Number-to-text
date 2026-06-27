@@ -98,8 +98,8 @@ int three(d_list *num, int idx) {
     if ( !need_to_skip ) {
         printf("hundred ");
         two(num, idx + 1);
-        return 0;
-    }
+        return false;
+    } 
 
     return two(num, idx + 1);
 }
@@ -123,7 +123,10 @@ int main(int argc, char **argsv)
     number.digits = argsv[1];
     number.digit_count = strlen(argsv[1]);
     number.extension = number.digit_count % 3;
-    int current_count = number.digit_count - number.extension;
+    int current_count = (number.digit_count - number.extension) / 3;
+    if ( current_count > 22 ) {
+        current_count = 22;
+    }
 
     if ( 
         number.digits[0] < '0' || number.digits[0] > '9' ||
@@ -147,25 +150,33 @@ int main(int argc, char **argsv)
     }
     
     if ( !need_to_skip ) {
-        // TODO
+        printf("%s ", big_number[current_count-1]);
     }
     
     need_to_skip = false;
-    current_count -= 3;
-
     int i = number.extension;
     while ( i < number.digit_count) {
         if ( 
-            number.digits[i] < '0' || number.digits[i] > '9' ||
+            number.digits[i]   < '0' || number.digits[i]   > '9' ||
             number.digits[i+1] < '0' || number.digits[i+1] > '9' ||
             number.digits[i+2] < '0' || number.digits[i+2] > '9'
         ) {
             printf("Error: data computed was not a digit.\n");
             return 1;
-        } 
+        }
 
-        //TODO
-        break;
+        if ( current_count == 0 ) {
+            current_count = 22;
+        }
+
+        need_to_skip = three(&number, i);
+
+        if ( !need_to_skip && current_count != 1) {
+            printf("%s ", big_number[current_count-2]);
+        }
+
+        current_count -= 1;
+        i += 3;
     }
 
     printf("\n");
