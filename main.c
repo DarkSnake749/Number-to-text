@@ -128,6 +128,8 @@ int main(int argc, char **argsv)
         current_count = 22;
     }
 
+    int count_to_skip_for_zero = current_count + 1;
+
     if ( 
         number.digits[0] < '0' || number.digits[0] > '9' ||
         ( number.digit_count > 1 && ( number.digits[0] < '0' || number.digits[0] > '9' )) ||
@@ -151,6 +153,8 @@ int main(int argc, char **argsv)
     
     if ( !need_to_skip ) {
         printf("%s ", big_number[current_count-1]);
+    } else {
+        count_to_skip_for_zero--;
     }
     
     need_to_skip = false;
@@ -173,11 +177,17 @@ int main(int argc, char **argsv)
 
         if ( !need_to_skip && current_count != 1) {
             printf("%s ", big_number[current_count-2]);
+        } else if ( need_to_skip ) {
+            count_to_skip_for_zero--;
         }
 
         current_count -= 1;
         i += 3;
     }
+
+    if ( count_to_skip_for_zero <= 0 ) {
+        printf("%s", digits[0]);
+    } 
 
     printf("\n");
     return 0;
